@@ -541,5 +541,26 @@
         });
 
     </script>
+    <script type='text/javascript'>
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+
+			embeddedservice_bootstrap.init(
+				'00DdM00000oCnDA',
+				'External_Drew_Company',
+				'https://plumlogix-dev-ed.develop.my.site.com/ESWExternalDrewCompany1781256770047',
+				{
+					scrt2URL: 'https://plumlogix-dev-ed.develop.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+    </script>
+    <script type='text/javascript' src='https://plumlogix-dev-ed.develop.my.site.com/ESWExternalDrewCompany1781256770047/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+
+    
 </body>
 </html>
