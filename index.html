@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Drew Company | Luxury Resort</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display (Serif) & Inter (Sans) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#1a202c',
+                            light: '#f8f9fa',
+                            accent: '#d4af37', // Luxury gold
+                            accentHover: '#b5952f'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #b5952f; }
+
+        /* Modal and Notification Animations */
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        .slide-up { animation: slideUp 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .toast-enter { animation: toastSlideIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+        .toast-exit { animation: toastSlideOut 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+        @keyframes toastSlideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes toastSlideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+
+        /* Hero Image overlay gradient */
+        .hero-gradient { background: linear-gradient(to bottom, rgba(26, 32, 44, 0.4) 0%, rgba(26, 32, 44, 0.8) 100%); }
+    </style>
+</head>
+<body class="bg-brand-light text-brand-dark font-sans antialiased overflow-x-hidden">
+
+    <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-24">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <i class="ph-fill ph-waves text-3xl text-brand-accent mr-2"></i>
+                    <span class="font-serif text-2xl font-bold tracking-wider text-white drop-shadow-md" id="logo-text">The Drew Co.</span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#accommodations" class="text-white hover:text-brand-accent transition font-medium text-sm tracking-wide uppercase drop-shadow-md nav-link">Accommodations</a>
+                    <a href="#experiences" class="text-white hover:text-brand-accent transition font-medium text-sm tracking-wide uppercase drop-shadow-md nav-link">Experiences</a>
+                    <button onclick="openModal('General Inquiry', 'Contact')" class="bg-brand-accent hover:bg-brand-accentHover text-white px-6 py-2.5 rounded-full transition shadow-lg font-medium text-sm tracking-wide uppercase">
+                        Book Now
+                    </button>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-white hover:text-brand-accent focus:outline-none drop-shadow-md" id="mobile-menu-btn">
+                        <i class="ph ph-list text-3xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-white shadow-xl absolute w-full" id="mobile-menu">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#accommodations" onclick="toggleMobileMenu()" class="block px-3 py-3 text-brand-dark font-medium border-b border-gray-100">Accommodations</a>
+                <a href="#experiences" onclick="toggleMobileMenu()" class="block px-3 py-3 text-brand-dark font-medium border-b border-gray-100">Experiences</a>
+                <button onclick="toggleMobileMenu(); openModal('General Inquiry', 'Contact')" class="w-full text-left px-3 py-3 text-brand-accent font-bold">Book Now</button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Luxury Resort Pool" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/2000x1000/1a202c/ffffff?text=The+Drew+Company'">
+            <div class="absolute inset-0 hero-gradient"></div>
+        </div>
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto slide-up">
+            <p class="text-brand-accent font-medium tracking-[0.2em] uppercase mb-4 text-sm md:text-base">Welcome to Paradise</p>
+            <h1 class="text-5xl md:text-7xl font-serif text-white mb-6 leading-tight">Unwind in Absolute <br/><span class="italic text-brand-accent">Elegance</span></h1>
+            <p class="text-gray-200 text-lg md:text-xl font-light mb-10 max-w-2xl mx-auto">Experience world-class luxury, breathtaking views, and unmatched comfort at The Drew Company Resort.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#accommodations" class="inline-flex items-center justify-center bg-transparent border-2 border-white text-white hover:bg-white hover:text-brand-dark px-8 py-3.5 rounded-full transition duration-300 font-medium text-sm tracking-wide uppercase">
+                    Explore Suites <i class="ph ph-arrow-down ml-2"></i>
+                </a>
+                <a href="#experiences" class="inline-flex items-center justify-center bg-brand-accent border-2 border-brand-accent text-white hover:bg-brand-accentHover hover:border-brand-accentHover px-8 py-3.5 rounded-full transition duration-300 font-medium text-sm tracking-wide uppercase">
+                    Discover Experiences
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section id="accommodations" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-serif text-brand-dark mb-4">Exceptional Accommodations</h2>
+                <div class="w-24 h-1 bg-brand-accent mx-auto mb-6 rounded-full"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">Discover our exquisitely designed rooms and suites, tailored to provide the ultimate sanctuary during your stay.</p>
+            </div>
+            <!-- Dynamic Grid for Rooms -->
+            <div id="rooms-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Rooms will be injected here via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Experiences Section -->
+    <section id="experiences" class="py-24 bg-brand-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-serif text-brand-dark mb-4">Curated Experiences</h2>
+                <div class="w-24 h-1 bg-brand-accent mx-auto mb-6 rounded-full"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">Immerse yourself in unforgettable moments designed exclusively for our guests. From ocean adventures to relaxing retreats.</p>
+            </div>
+            <!-- Dynamic Grid for Experiences -->
+            <div id="experiences-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Experiences will be injected here via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center mb-6">
+                        <i class="ph-fill ph-waves text-3xl text-brand-accent mr-2"></i>
+                        <span class="font-serif text-2xl font-bold tracking-wider">The Drew Co.</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">A premier luxury destination offering unparalleled service, exquisite dining, and unforgettable experiences.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-serif mb-6 text-brand-accent">Contact</h4>
+                    <ul class="space-y-4 text-gray-400 text-sm">
+                        <li class="flex items-center"><i class="ph ph-map-pin mr-3 text-lg"></i> 123 Paradise Blvd, Coral Coast</li>
+                        <li class="flex items-center"><i class="ph ph-phone mr-3 text-lg"></i> +1 (800) 555-DREW</li>
+                        <li class="flex items-center"><i class="ph ph-envelope mr-3 text-lg"></i> reservations@drewcompany.com</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-serif mb-6 text-brand-accent">Connect With Us</h4>
+                    <p class="text-gray-400 text-sm mb-4">Follow us on social media for exclusive offers, stunning views, and updates from the resort.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-accent transition"><i class="ph-fill ph-instagram-logo"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-accent transition"><i class="ph-fill ph-twitter-logo"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-accent transition"><i class="ph-fill ph-facebook-logo"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
+                <p>&copy; 2026 The Drew Company Resort. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Modal Overlay -->
+    <div id="booking-modal" class="fixed inset-0 z-[60] hidden bg-brand-dark/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform scale-95 transition-transform duration-300" id="modal-content">
+            <div class="relative bg-brand-dark py-6 px-8 text-white">
+                <button onclick="closeModal()" class="absolute top-6 right-6 text-white/70 hover:text-white focus:outline-none">
+                    <i class="ph ph-x text-2xl"></i>
+                </button>
+                <h3 class="font-serif text-2xl mb-1" id="modal-title">Make a Reservation</h3>
+                <p class="text-brand-accent text-sm flex items-center">
+                    <i class="ph-fill ph-calendar-check mr-1"></i> Secure Online Booking
+                </p>
+            </div>
+            <div class="p-8">
+                <form id="booking-form" onsubmit="handleBooking(event)">
+                    <input type="hidden" id="booking-item" value="">
+                    <input type="hidden" id="booking-type" value="">
+                    
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Selected Option</label>
+                        <div class="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200 text-brand-dark font-medium flex items-center justify-between">
+                            <span id="display-item-name">Standard Room</span>
+                            <span id="display-item-price" class="text-brand-accent font-semibold"></span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-5">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                            <input type="text" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-accent focus:border-brand-accent outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                            <input type="text" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-accent focus:border-brand-accent outline-none transition">
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <input type="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-accent focus:border-brand-accent outline-none transition">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Check-in / Date</label>
+                            <input type="date" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-accent focus:border-brand-accent outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Guests</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-accent focus:border-brand-accent outline-none transition bg-white">
+                                <option>1 Guest</option>
+                                <option>2 Guests</option>
+                                <option>3 Guests</option>
+                                <option>4+ Guests</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-brand-dark hover:bg-brand-accent text-white font-medium py-3 px-4 rounded-lg transition-colors duration-300 flex items-center justify-center">
+                        <i class="ph ph-check-circle mr-2 text-lg"></i> Confirm Reservation
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Notification/Message Box (Replaces alert()) -->
+    <div id="notification-container" class="fixed top-24 right-4 z-[70] flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+        // Resort Data
+        const resortData = {
+            rooms: [
+                {
+                    id: 'r1',
+                    name: 'Standard',
+                    description: 'A cozy, elegant space perfect for solo travelers or couples featuring essential luxury amenities.',
+                    price: 250,
+                    capacity: 2,
+                    image: 'https://images.unsplash.com/photo-1590490359683-658d3d23f972?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                },
+                {
+                    id: 'r2',
+                    name: 'Standard Suite',
+                    description: 'Upgraded space with a separate seating area and beautiful views of the resort gardens.',
+                    price: 350,
+                    capacity: 3,
+                    image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                },
+                {
+                    id: 'r3',
+                    name: 'Superior',
+                    description: 'Located on higher floors offering partial ocean views and enhanced premium furnishings.',
+                    price: 450,
+                    capacity: 2,
+                    image: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                },
+                {
+                    id: 'r4',
+                    name: 'Junior Suite',
+                    description: 'Spacious open-plan suite featuring a private balcony and an oversized soaking tub.',
+                    price: 550,
+                    capacity: 4,
+                    image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                },
+                {
+                    id: 'r5',
+                    name: 'Deluxe',
+                    description: 'Expansive beachfront room with direct access to the sand and personalized concierge service.',
+                    price: 750,
+                    capacity: 4,
+                    image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                },
+                {
+                    id: 'r6',
+                    name: 'Presidential Suite',
+                    description: 'The pinnacle of luxury. Penthouse views, private plunge pool, and 24/7 dedicated butler service.',
+                    price: 2500,
+                    capacity: 6,
+                    image: 'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                }
+            ],
+            experiences: [
+                {
+                    id: 'e1',
+                    name: 'Sunset Yacht Cruise',
+                    description: 'Sail the azure waters on a luxury yacht, enjoying champagne and panoramic coastline sunset views.',
+                    price: 299,
+                    duration: '3 Hours',
+                    image: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                },
+                {
+                    id: 'e2',
+                    name: 'Oceanfront Spa Retreat',
+                    description: 'Indulge in a 90-minute signature massage followed by thermal pools and an organic light lunch.',
+                    price: 350,
+                    duration: 'Full Day',
+                    image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                },
+                {
+                    id: 'e3',
+                    name: 'Private Beach Cabana',
+                    description: 'Your personal beachfront sanctuary with dedicated staff, unlimited refreshments, and plush seating.',
+                    price: 150,
+                    duration: 'Full Day',
+                    image: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                },
+                {
+                    id: 'e4',
+                    name: 'Scuba Diving Expedition',
+                    description: 'Explore vibrant coral reefs and marine life with our certified master dive instructors.',
+                    price: 180,
+                    duration: '4 Hours',
+                    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                },
+                {
+                    id: 'e5',
+                    name: 'Private Heli-Tour',
+                    description: 'A breathtaking aerial tour of the island, ending with a remote mountaintop champagne toast.',
+                    price: 850,
+                    duration: '2 Hours',
+                    image: 'https://images.unsplash.com/photo-1516280440502-39c5bb082b28?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                },
+                {
+                    id: 'e6',
+                    name: 'Cliffside Fine Dining',
+                    description: 'A romantic 7-course tasting menu curated by our executive chef, served under the stars.',
+                    price: 450,
+                    duration: 'Evening',
+                    image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                }
+            ]
+        };
+
+        // Function to render rooms
+        function renderRooms() {
+            const container = document.getElementById('rooms-container');
+            let html = '';
+
+            resortData.rooms.forEach(room => {
+                html += `
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition duration-300 group">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="${room.image}" alt="${room.name}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" onerror="this.src='https://placehold.co/600x400/f8f9fa/1a202c?text=${room.name}'">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-brand-dark font-bold shadow-md">
+                            $${room.price} <span class="text-xs font-normal text-gray-500">/night</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-serif font-bold text-brand-dark">${room.name}</h3>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="ph ph-users mr-1 text-brand-accent"></i> Up to ${room.capacity}
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-6 line-clamp-2 h-10">${room.description}</p>
+                        <button onclick="openModal('${room.name}', 'Room', ${room.price})" class="w-full border-2 border-brand-dark text-brand-dark hover:bg-brand-dark hover:text-white font-medium py-2.5 rounded-xl transition duration-300">
+                            Reserve Room
+                        </button>
+                    </div>
+                </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Function to render experiences
+        function renderExperiences() {
+            const container = document.getElementById('experiences-container');
+            let html = '';
+
+            resortData.experiences.forEach(exp => {
+                html += `
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition duration-300 group">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="${exp.image}" alt="${exp.name}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" onerror="this.src='https://placehold.co/600x400/f8f9fa/1a202c?text=${exp.name}'">
+                        <div class="absolute top-4 right-4 bg-brand-accent/90 backdrop-blur-sm text-white px-3 py-1 rounded-full font-bold shadow-md">
+                            $${exp.price}
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-serif font-bold text-brand-dark">${exp.name}</h3>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="ph ph-clock mr-1 text-brand-accent"></i> ${exp.duration}
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-6 line-clamp-2 h-10">${exp.description}</p>
+                        <button onclick="openModal('${exp.name}', 'Experience', ${exp.price})" class="w-full bg-brand-light text-brand-dark border-2 border-transparent hover:border-brand-accent font-medium py-2.5 rounded-xl transition duration-300">
+                            Book Experience
+                        </button>
+                    </div>
+                </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            const logo = document.getElementById('logo-text');
+            const links = document.querySelectorAll('.nav-link');
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-white', 'shadow-md');
+                nav.classList.remove('py-2');
+                logo.classList.replace('text-white', 'text-brand-dark');
+                logo.classList.remove('drop-shadow-md');
+                mobileBtn.classList.replace('text-white', 'text-brand-dark');
+                mobileBtn.classList.remove('drop-shadow-md');
+                links.forEach(link => {
+                    link.classList.replace('text-white', 'text-brand-dark');
+                    link.classList.remove('drop-shadow-md');
+                });
+            } else {
+                nav.classList.remove('bg-white', 'shadow-md');
+                nav.classList.add('py-2');
+                logo.classList.replace('text-brand-dark', 'text-white');
+                logo.classList.add('drop-shadow-md');
+                mobileBtn.classList.replace('text-brand-dark', 'text-white');
+                mobileBtn.classList.add('drop-shadow-md');
+                links.forEach(link => {
+                    link.classList.replace('text-brand-dark', 'text-white');
+                    link.classList.add('drop-shadow-md');
+                });
+            }
+        });
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Modal Logic
+        const modal = document.getElementById('booking-modal');
+        const modalContent = document.getElementById('modal-content');
+
+        function openModal(itemName, itemType, price = null) {
+            document.getElementById('booking-item').value = itemName;
+            document.getElementById('booking-type').value = itemType;
+            
+            document.getElementById('display-item-name').textContent = itemName;
+            document.getElementById('display-item-price').textContent = price ? `$${price}` : '';
+            
+            document.getElementById('modal-title').textContent = itemType === 'Room' ? 'Room Reservation' : (itemType === 'Experience' ? 'Book Experience' : 'Make an Inquiry');
+
+            modal.classList.remove('hidden');
+            // Trigger reflow for animation
+            void modal.offsetWidth; 
+            modal.classList.replace('opacity-0', 'opacity-100');
+            modalContent.classList.replace('scale-95', 'scale-100');
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelector('input[type="date"]').min = today;
+        }
+
+        function closeModal() {
+            modal.classList.replace('opacity-100', 'opacity-0');
+            modalContent.classList.replace('scale-100', 'scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.getElementById('booking-form').reset();
+            }, 300); // Wait for transition
+        }
+
+        // Custom Notification Function (Replacing alert)
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('notification-container');
+            const toast = document.createElement('div');
+            
+            const icon = type === 'success' ? '<i class="ph-fill ph-check-circle text-green-500 text-2xl mr-3"></i>' : '<i class="ph-fill ph-info text-blue-500 text-2xl mr-3"></i>';
+            const bgColor = 'bg-white';
+            const borderColor = type === 'success' ? 'border-green-500' : 'border-blue-500';
+
+            toast.className = `flex items-center p-4 mb-3 ${bgColor} border-l-4 ${borderColor} rounded shadow-lg toast-enter pointer-events-auto min-w-[300px] max-w-md`;
+            toast.innerHTML = `
+                ${icon}
+                <div>
+                    <h4 class="font-bold text-gray-800 text-sm">${type === 'success' ? 'Success' : 'Notification'}</h4>
+                    <p class="text-gray-600 text-sm">${message}</p>
+                </div>
+            `;
+
+            container.appendChild(toast);
+
+            // Auto remove after 4 seconds
+            setTimeout(() => {
+                toast.classList.replace('toast-enter', 'toast-exit');
+                setTimeout(() => {
+                    if(container.contains(toast)) {
+                        container.removeChild(toast);
+                    }
+                }, 500); // Wait for exit animation
+            }, 4000);
+        }
+
+        // Form Handling
+        function handleBooking(e) {
+            e.preventDefault();
+            const itemName = document.getElementById('booking-item').value;
+            const type = document.getElementById('booking-type').value;
+            
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="ph ph-spinner animate-spin mr-2 text-lg"></i> Processing...';
+            btn.disabled = true;
+
+            // Simulated CRM Sync
+            setTimeout(() => {
+                closeModal();
+                showNotification(`Your ${type.toLowerCase()} request for "${itemName}" has been received and synchronized via Salesforce CRM.`);
+                
+                // Reset button
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 500);
+            }, 1500);
+        }
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            renderRooms();
+            renderExperiences();
+        });
+
+    </script>
+</body>
+</html>
